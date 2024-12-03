@@ -1,20 +1,122 @@
-// CK_LAR-System.cpp : Diese Datei enthält die Funktion "main". Hier beginnt und endet die Ausführung des Programms.
-//
-
 #include <iostream>
+#include "Database.h"
+#include "Password_EDUtility.h"
 
-int main()
-{
-    std::cout << "Hello World!\n";
+using namespace std;
+
+Database DB;
+
+int Choice;
+string Username;
+string Password;
+string EMail;
+int TFACode;
+
+bool Register(string Username, string Password, string EMail, int TFACode);
+bool Login(string Username, string Password);
+bool ForgotPassword(string Username, string EMail, int TFACode);
+
+int main() {
+	while (true) {
+		cout << "----------          MENU          ----------" << endl;
+
+		cout << "1) Login" << endl;
+		cout << "2) Register" << endl;
+		cout << "3) Forgot Password" << endl;
+		cout << "4) Exit" << endl;
+
+		cout << "enter your choice: ";
+		cin >> Choice;
+
+		if (!DB.ConnectToDatabase()) {
+			cout << "Failed to connect to the database!" << endl;
+			cout << "Please establish a connection to the database first!" << endl;
+			return 1;
+		}
+		else {
+			switch (Choice) {
+			case 1:
+				cout << "----------          LOGIN          ----------" << endl;
+				cout << "Enter your username: " << endl;
+				cin >> Username;
+
+				cout << "Enter your password: " << endl;
+				cin >> Password;
+
+				if (Login(Username, Password)) {
+					cout << "Successfully logged in!" << endl;
+				}
+				else {
+					cout << "Failed to login!" << endl;
+				}
+
+				break;
+
+			case 2:
+				cout << "----------          REGISTER          ----------" << endl;
+				cout << "Enter your username: " << endl;
+				cin >> Username;
+
+				cout << "Enter your password: " << endl;
+				cin >> Password;
+
+				cout << "Enter your email: " << endl;
+				cin >> EMail;
+
+				cout << "Enter your 2FA Code (Your own PIN-Code): " << endl;
+				cin >> TFACode;
+
+				if (Register(Username, Password, EMail, TFACode)) {
+					cout << "Successfully registered!" << endl;
+				}
+				else {
+					cout << "Failed to register!" << endl;
+				}
+
+				break;
+			case 3:
+				cout << "----------          FORGOT PASSWORD          ----------" << endl;
+				cout << "Enter your username: " << endl;
+				cin >> Username;
+
+				cout << "Enter your email: " << endl;
+				cin >> EMail;
+
+				cout << "Enter your 2FA Code (Your own PIN-Code): " << endl;
+				cin >> TFACode;
+
+				if (ForgotPassword(Username, EMail, TFACode)) {
+					cout << "Successfully reset password!" << endl;
+				}
+				else {
+					cout << "Failed to reset password!" << endl;
+				}
+
+				break;
+
+			case 4:
+				cout << "Saving everything..." << endl;
+				cout << "Exiting... Goodbye!!" << endl;
+				return 0;
+			}
+		}
+	}
 }
 
-// Programm ausführen: STRG+F5 oder Menüeintrag "Debuggen" > "Starten ohne Debuggen starten"
-// Programm debuggen: F5 oder "Debuggen" > Menü "Debuggen starten"
+bool Register(string Username, string Password, string EMail, int TFACode) {
+	cout << "Registering..." << endl;
 
-// Tipps für den Einstieg: 
-//   1. Verwenden Sie das Projektmappen-Explorer-Fenster zum Hinzufügen/Verwalten von Dateien.
-//   2. Verwenden Sie das Team Explorer-Fenster zum Herstellen einer Verbindung mit der Quellcodeverwaltung.
-//   3. Verwenden Sie das Ausgabefenster, um die Buildausgabe und andere Nachrichten anzuzeigen.
-//   4. Verwenden Sie das Fenster "Fehlerliste", um Fehler anzuzeigen.
-//   5. Wechseln Sie zu "Projekt" > "Neues Element hinzufügen", um neue Codedateien zu erstellen, bzw. zu "Projekt" > "Vorhandenes Element hinzufügen", um dem Projekt vorhandene Codedateien hinzuzufügen.
-//   6. Um dieses Projekt später erneut zu öffnen, wechseln Sie zu "Datei" > "Öffnen" > "Projekt", und wählen Sie die SLN-Datei aus.
+	DB.CheckUsernameExistance(Username);
+
+	return true;
+}
+
+bool Login(string Username, string Password) {
+	cout << "Logging in..." << endl;
+	return true;
+}
+
+bool ForgotPassword(string Username, string EMail, int TFACode) {
+	cout << "Forgot Password..." << endl;
+	return true;
+}
